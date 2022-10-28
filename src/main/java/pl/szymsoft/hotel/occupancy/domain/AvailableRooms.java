@@ -3,6 +3,8 @@ package pl.szymsoft.hotel.occupancy.domain;
 import lombok.Builder;
 import lombok.Value;
 
+import static pl.szymsoft.utils.Ints.requirePositiveOrZero;
+
 @Value
 @Builder
 public class AvailableRooms {
@@ -11,16 +13,7 @@ public class AvailableRooms {
     int numberOfEconomy;
 
     private AvailableRooms(int numberOfPremium, int numberOfEconomy) {
-
-        if (numberOfPremium < 0) {
-            throw new IllegalArgumentException("numberOfPremium has to be positive or zero, but was " + numberOfPremium);
-        }
-
-        if (numberOfEconomy < 0) {
-            throw new IllegalArgumentException("numberOfEconomy has to be positive or zero, but was " + numberOfEconomy);
-        }
-
-        this.numberOfPremium = numberOfPremium;
-        this.numberOfEconomy = numberOfEconomy;
+        this.numberOfPremium = requirePositiveOrZero(numberOfPremium, "numberOfPremium");
+        this.numberOfEconomy = requirePositiveOrZero(numberOfEconomy, "numberOfEconomy");
     }
 }
