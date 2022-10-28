@@ -11,13 +11,43 @@
 
 ## How to build
 ```bash
-./gradlew clean test
+./gradlew clean check
 ```
 
 ## How to run
 ```bash
 ./gradlew bootRun
 ```
+
+# Notes
+
+## Git
+
+I usually do not keep commit history in such high granulation on the master branch. Instead, during a merge to the master,
+I squash all commits from the feature branch (preferably short living) so that there is only one commit on the master branch
+that represents all the changes.
+
+## Tests
+
+Human-friendly test names should work in IntelliJ IDEA by default, but in the past, the following setting was needed:
+> Build, Execution, Deployment -> Build Tools -> Gradle
+> * Run tests using: **IntelliJ IDE**
+
+The effect should be as the following:
+
+![Human readable displayed test names](docs/images/human_readable_displayed_test_names.png)
+
+## Null-Safety
+
+I use an annotation `@NonNullApi` on a package level to instruct IDE that my code is non-nullable,
+so that IDE can detect and shows warnings about nullability (static analysis). Additionally, I use Lombok `@NonNull`
+to get a guaranty that I will not receive any null values. If I need to return a value which can be null:
+
+* if it is a public API then I return an `Optional`.
+* otherwise I can declare it with `@Nullable` annotation, so that IDE will not rise a warning.
+
+This way I can get much better protection from NPE in a Java. The whole idea is described here:
+[Spring Null-Safety Annotations](https://www.baeldung.com/spring-null-safety-annotations)
 
 # Tech Stack
 
