@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 // @SuppressFBWarnings on lambdas doesn't work - https://github.com/spotbugs/spotbugs/issues/724
 @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
-class AvailableRoomsTest {
+class AvailableRoomsUnitTest {
 
     @ParameterizedTest(name = "e.g. a combination of {0} premium rooms and {1} economy rooms should be rejected.")
     @CsvSource(textBlock = """
@@ -36,7 +36,7 @@ class AvailableRoomsTest {
              0, 1
              1, 0
             """)
-    void should_accept_positive_and_zero_rooms(int premiumRooms, int economyRooms) {
+    void should_accept_positive_and_zero_numbers_of_rooms(int premiumRooms, int economyRooms) {
 
         // when
         final var availableRooms = AvailableRooms.builder()
