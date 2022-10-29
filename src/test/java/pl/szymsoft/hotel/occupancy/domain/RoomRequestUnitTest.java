@@ -1,10 +1,9 @@
-package pl.szymsoft.hotel.room.domain.api;
+package pl.szymsoft.hotel.occupancy.domain;
 
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import pl.szymsoft.hotel.occupancy.domain.RoomRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -15,7 +14,6 @@ class RoomRequestUnitTest {
     void should_not_accept_nullable_maxPrice() {
 
         // when
-        //noinspection ConstantConditions
         final var throwable = catchThrowable(() -> new RoomRequest(null));
 
         // then
