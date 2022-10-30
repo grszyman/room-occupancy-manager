@@ -1,4 +1,4 @@
-package pl.szymsoft.hotel.occupancy.domain;
+package pl.szymsoft.hotel.occupancy.domain.api;
 
 import javax.money.MonetaryAmount;
 

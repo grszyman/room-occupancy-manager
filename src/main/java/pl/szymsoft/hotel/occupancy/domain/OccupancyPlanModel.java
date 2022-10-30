@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.javamoney.moneta.Money;
+import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlan;
+import pl.szymsoft.hotel.occupancy.domain.api.RoomRequest;
 
 import javax.money.MonetaryAmount;
 
@@ -20,14 +22,16 @@ import static pl.szymsoft.utils.Objects.require;
 @Value
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SuppressFBWarnings("EI_EXPOSE_REP")
-public class OccupancyPlan {
+// Instead of implementing `OccupancyPlan`, the class could have toDto() method, but for now,
+// we don't need that as a client doesn't know that it deals with a model (thanks to fine-tuned visibility of the class).
+class OccupancyPlanModel implements OccupancyPlan {
 
     List<RoomRequest> premiumRequests;
     List<RoomRequest> economyRequests;
     MonetaryAmount premiumAmount;
     MonetaryAmount economyAmount;
 
-    private OccupancyPlan(
+    private OccupancyPlanModel(
             Stream<RoomRequest> premiumRequests,
             Stream<RoomRequest> economyRequests
     ) {
@@ -72,7 +76,7 @@ public class OccupancyPlan {
         final var extraEconomyRequests = max(economyRoomsCount, economyRequests.size()) - economyRoomsCount;
         final var requestsToUpgrade = min(extraPremiumRooms, extraEconomyRequests);
 
-        return new OccupancyPlan(
+        return new OccupancyPlanModel(
                 premiumRequests.take(premiumRoomsCount)
                         .appendAll(economyRequests.take(requestsToUpgrade)),
                 economyRequests.drop(requestsToUpgrade)

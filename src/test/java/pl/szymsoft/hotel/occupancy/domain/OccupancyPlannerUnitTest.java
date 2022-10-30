@@ -3,6 +3,8 @@ package pl.szymsoft.hotel.occupancy.domain;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlanner;
+import pl.szymsoft.hotel.occupancy.domain.api.RoomRequest;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
