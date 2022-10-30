@@ -1,30 +1,79 @@
-# TODO
-
 # Getting Started
 
 ## Requirements
 
 * Java 18 - preferred way of installation is [SDKMAN!](https://sdkman.io/)
 
->The project is based on Java 18, because it's the latest Java version supported by
-[Gradle](https://docs.gradle.org/current/userguide/compatibility.html) at the moment.
+  > The project is based on Java 18, because it's the latest Java version supported by
+  [Gradle](https://docs.gradle.org/current/userguide/compatibility.html) at the moment.
+
+* [httpie](https://httpie.io/) - optional, for calling REST API. The easiest way to install on macOS is with [Homebrew](https://brew.sh/)
+    ```bash
+    brew install httpie
+    ```
 
 ## How to build
+
 ```bash
 ./gradlew clean check
 ```
 
 ## How to run
+
 ```bash
 ./gradlew bootRun
 ```
 
+## Calling API
+
+```bash
+echo -n '{"premiumRooms": 3, "economyRooms": 3}' | http POST localhost:8080/occupancy-plans
+```
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 137
+
+{
+    "premiumUsage": 3,
+    "premiumAmount": {
+        "amount": 738.0,
+        "currency": "EUR"
+    },
+    "economyUsage": 3,
+    "economyAmount": {
+        "amount": 167.99,
+        "currency": "EUR"
+    }
+}
+```
+
 # Notes
+
+## Design
+
+The application is designed with Hexagonal Architecture, which brings many benefits,
+e.g. the most valuable - business - module is written in pure Java.
+It doesn't have dependencies on Spring or any infrastructure. Thanks to that, it is light,
+easy and fast to test and develop. Its implementation is hidden behind API (package `domain.api`),
+and it is also isolated from dependencies by ports (package `domain.ports`).
+
+## What is missing
+
+The following things were not done due to time limitations and the project's assumptions.
+
+* Proper support for currencies
+* Comprehensive error handling for REST API
+* Separate test suites for different kinds of tests (unit, integration, e2e, etc...)
+* And many more...
 
 ## Git
 
-I usually do not keep commit history in such high granulation on the master branch. Instead, during a merge to the master,
-I squash all commits from the feature branch (preferably short living) so that there is only one commit on the master branch
+I usually do not keep commit history in such high granulation on the master branch. Instead, during a merge to the
+master,
+I squash all commits from the feature branch (preferably short living) so that there is only one commit on the master
+branch
 that represents all the changes.
 
 ## Tests
@@ -53,16 +102,18 @@ This way I can get much better protection from NPE in a Java. The whole idea is 
 
 ## Frameworks
 
-* [Spring Reactive](https://spring.io/reactive) - a pet project like this is an excellent opportunity to try new things!  
+* [Spring Reactive](https://spring.io/reactive) - a pet project like this is an excellent opportunity to try new things!
 
 ## Libraries
 
-* [vavr](https://www.vavr.io/) - turns java™ upside down
-* [JUnit 5](https://junit.org/junit5/) - programmer-friendly testing framework for Java and the JVM
-* [AssertJ](https://assertj.github.io/doc/) - fluent assertions java library
+* [vavr](https://www.vavr.io/) - turns java™ upside down.
+* [JUnit 5](https://junit.org/junit5/) - programmer-friendly testing framework for Java and the JVM.
+* [AssertJ](https://assertj.github.io/doc/) - fluent assertions java library.
+* [Moneta](https://javamoney.github.io/ri.html) - Reference Implementation of JSR 354 - the Java Money and Currency API for the Java™
 
 ## Tools
 
-* [The Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html)
-* [Project Lombok](https://projectlombok.org/)
+* [The Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) - the recommended way to execute
+  any Gradle build.
+* [Project Lombok](https://projectlombok.org/) - Never write another getter or equals method again...
 * [SpotBugs](https://spotbugs.github.io/) - a program which uses static analysis to look for bugs in Java code.
