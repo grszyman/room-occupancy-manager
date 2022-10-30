@@ -1,3 +1,18 @@
 occupancy-planner:
   default-premium-price: 'EUR 100'
   room-requests: '23, 45, 155, 374, 22, 99.99, 100, 101, 115, 209'
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+spring:
+  codec:
+    log-request-details: true
+
+logging:
+  level:
+    web: 'DEBUG'
