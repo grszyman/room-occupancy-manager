@@ -39,25 +39,25 @@ class OccupancyPlannerUnitTest {
                               10 |                  1 |             9 |       1221.99 |             1 |            22
             """)
     void should_create_expected_occupancy_plan(
-            int freePremiumRooms,
-            int freeEconomyRooms,
+            int premiumRoomsCount,
+            int economyRoomsCount,
             int expectedUsagePremium,
             BigDecimal expectedTotalPremiumPrice,
             int expectedUsageEconomy,
             BigDecimal expectedTotalEconomyPrice
     ) {
         // when
-        final var occupancyPlan = occupancyPlanner.createPlanFor(freePremiumRooms, freeEconomyRooms);
+        final var occupancyPlan = occupancyPlanner.createPlanFor(premiumRoomsCount, economyRoomsCount);
 
         // then
-        assertThat(occupancyPlan.getFulfilledPremiumRequests().size())
+        assertThat(occupancyPlan.getPremiumRequests().size())
                 .isEqualTo(expectedUsagePremium);
-        assertThat(occupancyPlan.getTotalPremiumPrice())
+        assertThat(occupancyPlan.getPremiumAmount())
                 .isEqualTo(Money.of(expectedTotalPremiumPrice, EUR));
 
-        assertThat(occupancyPlan.getFulfilledEconomyRequests().size())
+        assertThat(occupancyPlan.getEconomyRequests().size())
                 .isEqualTo(expectedUsageEconomy);
-        assertThat(occupancyPlan.getTotalEconomyPrice())
+        assertThat(occupancyPlan.getEconomyAmount())
                 .isEqualTo(Money.of(expectedTotalEconomyPrice, EUR));
     }
 
@@ -67,13 +67,12 @@ class OccupancyPlannerUnitTest {
              0, -1
             -1, -1
             """)
-    void should_not_accept_negative_numbers_of_free_rooms(int freePremiumRooms, int freeEconomyRooms) {
+    void should_not_accept_negative_numbers_of_free_rooms(int premiumRoomsCount, int economyRoomsCount) {
 
         // when
-        final var throwable = catchThrowable(() -> occupancyPlanner.createPlanFor(freePremiumRooms, freeEconomyRooms));
+        final var throwable = catchThrowable(() -> occupancyPlanner.createPlanFor(premiumRoomsCount, economyRoomsCount));
 
         // then
         assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
     }
-
 }

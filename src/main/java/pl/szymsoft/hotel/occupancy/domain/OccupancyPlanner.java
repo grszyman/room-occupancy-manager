@@ -17,13 +17,13 @@ public class OccupancyPlanner {
     @NonNull
     private final RoomRequestsProvider roomRequestsProvider;
 
-    public OccupancyPlan createPlanFor(int freePremiumRooms, int freeEconomyRooms) {
+    public OccupancyPlan createPlanFor(int premiumRoomsCount, int economyRoomsCount) {
 
         return OccupancyPlan.builder()
                 .requests(roomRequestsProvider.getAll())
                 .premiumPrice(premiumPrice)
-                .freePremiumRooms(freePremiumRooms)
-                .freeEconomyRooms(freeEconomyRooms)
+                .premiumRoomsCount(premiumRoomsCount)
+                .economyRoomsCount(economyRoomsCount)
                 .build();
     }
 

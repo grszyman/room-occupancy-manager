@@ -22,19 +22,19 @@ import static pl.szymsoft.utils.Objects.require;
 @SuppressFBWarnings("EI_EXPOSE_REP")
 public class OccupancyPlan {
 
-    List<RoomRequest> fulfilledPremiumRequests;
-    List<RoomRequest> fulfilledEconomyRequests;
-    MonetaryAmount totalPremiumPrice;
-    MonetaryAmount totalEconomyPrice;
+    List<RoomRequest> premiumRequests;
+    List<RoomRequest> economyRequests;
+    MonetaryAmount premiumAmount;
+    MonetaryAmount economyAmount;
 
     private OccupancyPlan(
-            Stream<RoomRequest> fulfilledPremiumRequests,
-            Stream<RoomRequest> fulfilledEconomyRequests
+            Stream<RoomRequest> premiumRequests,
+            Stream<RoomRequest> economyRequests
     ) {
-        this.fulfilledPremiumRequests = fulfilledPremiumRequests.toList();
-        this.fulfilledEconomyRequests = fulfilledEconomyRequests.toList();
-        this.totalPremiumPrice = totalPriceOf(fulfilledPremiumRequests);
-        this.totalEconomyPrice = totalPriceOf(fulfilledEconomyRequests);
+        this.premiumRequests = premiumRequests.toList();
+        this.economyRequests = economyRequests.toList();
+        this.premiumAmount = totalPriceOf(premiumRequests);
+        this.economyAmount = totalPriceOf(economyRequests);
     }
 
     private static MonetaryAmount totalPriceOf(Stream<RoomRequest> roomRequests) {
@@ -48,34 +48,34 @@ public class OccupancyPlan {
     private static OccupancyPlan create(
             Iterable<RoomRequest> requests,
             MonetaryAmount premiumPrice,
-            int freePremiumRooms,
-            int freeEconomyRooms
+            int premiumRoomsCount,
+            int economyRoomsCount
     ) {
         require(premiumPrice, MonetaryAmount::isPositiveOrZero, "premiumPrice has to be positive or zero");
-        requirePositiveOrZero(freePremiumRooms, "freePremiumRooms");
-        requirePositiveOrZero(freeEconomyRooms, "freeEconomyRooms");
+        requirePositiveOrZero(premiumRoomsCount, "premiumRoomsCount");
+        requirePositiveOrZero(economyRoomsCount, "economyRoomsCount");
 
         return Stream.ofAll(requests)
                 .sorted(comparing(RoomRequest::maxPrice).reversed())
                 .partition(request -> request.maxPrice().isGreaterThanOrEqualTo(premiumPrice))
                 .apply((premiumRequests, economyRequests)
-                        -> createBookingPlan(premiumRequests, economyRequests, freePremiumRooms, freeEconomyRooms));
+                        -> createBookingPlan(premiumRequests, economyRequests, premiumRoomsCount, economyRoomsCount));
     }
 
     private static OccupancyPlan createBookingPlan(
             Stream<RoomRequest> premiumRequests,
             Stream<RoomRequest> economyRequests,
-            int freePremiumRooms,
-            int freeEconomyRooms
+            int premiumRoomsCount,
+            int economyRoomsCount
     ) {
-        final var extraPremiumRooms = freePremiumRooms - min(freePremiumRooms, premiumRequests.size());
-        final var extraEconomyRequests = max(freeEconomyRooms, economyRequests.size()) - freeEconomyRooms;
+        final var extraPremiumRooms = premiumRoomsCount - min(premiumRoomsCount, premiumRequests.size());
+        final var extraEconomyRequests = max(economyRoomsCount, economyRequests.size()) - economyRoomsCount;
         final var requestsToUpgrade = min(extraPremiumRooms, extraEconomyRequests);
 
         return new OccupancyPlan(
-                premiumRequests.take(freePremiumRooms)
+                premiumRequests.take(premiumRoomsCount)
                         .appendAll(economyRequests.take(requestsToUpgrade)),
                 economyRequests.drop(requestsToUpgrade)
-                        .take(freeEconomyRooms));
+                        .take(economyRoomsCount));
     }
 }

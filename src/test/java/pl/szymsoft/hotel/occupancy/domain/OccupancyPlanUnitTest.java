@@ -16,8 +16,8 @@ class OccupancyPlanUnitTest {
         final var throwable = catchThrowable(() -> OccupancyPlan.builder()
                 .requests(emptyList())
                 .premiumPrice(Money.of(-1, "EUR"))
-                .freePremiumRooms(0)
-                .freeEconomyRooms(0)
+                .premiumRoomsCount(0)
+                .economyRoomsCount(0)
                 .build());
 
         // then
