@@ -22,7 +22,7 @@ class OccupancyPlannerService implements OccupancyPlanner {
     @Override
     public OccupancyPlan createPlanFor(int premiumRoomsCount, int economyRoomsCount) {
 
-        return OccupancyPlanModel.builder()
+        return OccupancyModel.builder()
                 .requests(roomRequestsProvider.getAll())
                 .premiumPrice(premiumPrice)
                 .premiumRoomsCount(premiumRoomsCount)

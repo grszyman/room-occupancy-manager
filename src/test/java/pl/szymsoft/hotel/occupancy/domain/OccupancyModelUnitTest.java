@@ -7,13 +7,13 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-class OccupancyPlanModelUnitTest {
+class OccupancyModelUnitTest {
 
     @Test
     void should_not_accept_negative_premium_price() {
 
         // when
-        final var throwable = catchThrowable(() -> OccupancyPlanModel.builder()
+        final var throwable = catchThrowable(() -> OccupancyModel.builder()
                 .requests(emptyList())
                 .premiumPrice(Money.of(-1, "EUR"))
                 .premiumRoomsCount(0)

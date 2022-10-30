@@ -15,7 +15,7 @@
 ## How to build
 
 ```bash
-./gradlew clean check
+./gradlew clean build
 ```
 
 ## How to run

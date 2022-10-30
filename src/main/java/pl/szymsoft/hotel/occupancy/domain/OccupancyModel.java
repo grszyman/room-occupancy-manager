@@ -24,14 +24,14 @@ import static pl.szymsoft.utils.Objects.require;
 @SuppressFBWarnings("EI_EXPOSE_REP")
 // Instead of implementing `OccupancyPlan`, the class could have toDto() method, but for now,
 // we don't need that as a client doesn't know that it deals with a model (thanks to fine-tuned visibility of the class).
-class OccupancyPlanModel implements OccupancyPlan {
+class OccupancyModel implements OccupancyPlan {
 
     List<RoomRequest> premiumRequests;
     List<RoomRequest> economyRequests;
     MonetaryAmount premiumAmount;
     MonetaryAmount economyAmount;
 
-    private OccupancyPlanModel(
+    private OccupancyModel(
             Stream<RoomRequest> premiumRequests,
             Stream<RoomRequest> economyRequests
     ) {
@@ -76,7 +76,7 @@ class OccupancyPlanModel implements OccupancyPlan {
         final var extraEconomyRequests = max(economyRoomsCount, economyRequests.size()) - economyRoomsCount;
         final var requestsToUpgrade = min(extraPremiumRooms, extraEconomyRequests);
 
-        return new OccupancyPlanModel(
+        return new OccupancyModel(
                 premiumRequests.take(premiumRoomsCount)
                         .appendAll(economyRequests.take(requestsToUpgrade)),
                 economyRequests.drop(requestsToUpgrade)
