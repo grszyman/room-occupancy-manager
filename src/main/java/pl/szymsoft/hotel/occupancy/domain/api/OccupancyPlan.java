@@ -19,16 +19,10 @@ import static lombok.EqualsAndHashCode.CacheStrategy.LAZY;
 @SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"})
 public class OccupancyPlan {
 
-    private static final OccupancyPlan EMPTY = OccupancyPlan.builder().build();
-
     List<RoomRequest> premiumRequests;
     List<RoomRequest> economyRequests;
     MonetaryAmount premiumAmount;
     MonetaryAmount economyAmount;
-
-    public static OccupancyPlan empty() {
-        return EMPTY;
-    }
 
     @Builder
     private OccupancyPlan(
@@ -39,6 +33,30 @@ public class OccupancyPlan {
         this.economyRequests = List.ofAll(requireNonNullElseGet(economyRequests, List::empty));
         this.premiumAmount = totalPriceOf(this.premiumRequests);
         this.economyAmount = totalPriceOf(this.economyRequests);
+    }
+
+    @SuppressWarnings("unused")
+    public static class OccupancyPlanBuilder {
+
+        public OccupancyPlanBuilder premiumRequests(Iterable<RoomRequest> roomRequests) {
+            this.premiumRequests = roomRequests;
+            return this;
+        }
+
+        public OccupancyPlanBuilder premiumRequests(RoomRequest... roomRequests) {
+            this.premiumRequests = List.of(roomRequests);
+            return this;
+        }
+
+        public OccupancyPlanBuilder economyRequests(Iterable<RoomRequest> economyRequests) {
+            this.economyRequests = economyRequests;
+            return this;
+        }
+
+        public OccupancyPlanBuilder economyRequests(RoomRequest... economyRequests) {
+            this.economyRequests = List.of(economyRequests);
+            return this;
+        }
     }
 
     private static MonetaryAmount totalPriceOf(Iterable<RoomRequest> roomRequests) {

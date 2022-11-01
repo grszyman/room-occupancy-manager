@@ -1,5 +1,6 @@
 package pl.szymsoft.hotel.occupancy.restapi;
 
+import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -9,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlan;
 import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlanner;
+import pl.szymsoft.hotel.occupancy.domain.api.RoomRequest;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static pl.szymsoft.hotel.occupancy.restapi.OccupancyPlannerRouterUnitTest.LocalConfiguration;
@@ -41,14 +43,14 @@ class OccupancyPlannerRouterUnitTest {
         response.expectStatus().isOk()
                 .expectBody().json("""
                         {
-                            "premiumUsage": 0,
+                            "premiumUsage": 2,
                             "premiumAmount": {
-                                "amount": 0,
+                                "amount": 201,
                                 "currency": "EUR"
                             },
-                            "economyUsage": 0,
+                            "economyUsage": 1,
                             "economyAmount": {
-                                "amount": 0,
+                                "amount": 99.99,
                                 "currency": "EUR"
                             }
                         }
@@ -101,7 +103,13 @@ class OccupancyPlannerRouterUnitTest {
 
         @Bean
         OccupancyPlanner occupancyPlanner() {
-            return (premiumRoomsCount, economyRoomsCount) -> OccupancyPlan.empty();
+            return (premiumRoomsCount, economyRoomsCount) -> OccupancyPlan.builder()
+                    .premiumRequests(
+                            new RoomRequest(Money.of(100, "EUR")),
+                            new RoomRequest(Money.of(101, "EUR")))
+                    .economyRequests(
+                            new RoomRequest(Money.of(99.99, "EUR")))
+                    .build();
         }
     }
 }
