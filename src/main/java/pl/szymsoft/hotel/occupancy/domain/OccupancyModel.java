@@ -1,12 +1,8 @@
 package pl.szymsoft.hotel.occupancy.domain;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.javamoney.moneta.Money;
 import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlan;
 import pl.szymsoft.hotel.occupancy.domain.api.RoomRequest;
 
@@ -19,37 +15,27 @@ import static lombok.AccessLevel.PACKAGE;
 import static pl.szymsoft.utils.Ints.requirePositiveOrZero;
 import static pl.szymsoft.utils.Objects.require;
 
-@Value
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SuppressFBWarnings("EI_EXPOSE_REP")
-// Instead of implementing `OccupancyPlan`, the class could have toDto() method, but for now,
-// we don't need that as a client doesn't know that it deals with a model (thanks to fine-tuned visibility of the class).
-class OccupancyModel implements OccupancyPlan {
+final class OccupancyModel {
 
-    List<RoomRequest> premiumRequests;
-    List<RoomRequest> economyRequests;
-    MonetaryAmount premiumAmount;
-    MonetaryAmount economyAmount;
+    private final OccupancyPlan occupancyPlan;
 
     private OccupancyModel(
             Stream<RoomRequest> premiumRequests,
             Stream<RoomRequest> economyRequests
     ) {
-        this.premiumRequests = premiumRequests.toList();
-        this.economyRequests = economyRequests.toList();
-        this.premiumAmount = totalPriceOf(premiumRequests);
-        this.economyAmount = totalPriceOf(economyRequests);
+        occupancyPlan = OccupancyPlan.builder()
+                .premiumRequests(premiumRequests.toList())
+                .economyRequests(economyRequests.toList())
+                .build();
     }
 
-    private static MonetaryAmount totalPriceOf(Stream<RoomRequest> roomRequests) {
-        return roomRequests
-                .map(RoomRequest::maxPrice)
-                .reduceOption(MonetaryAmount::add)
-                .getOrElse(() -> Money.of(0, "EUR"));
+    OccupancyPlan toPlan() {
+        return occupancyPlan;
     }
 
     @Builder(access = PACKAGE)
-    private static OccupancyPlan create(
+    private static OccupancyModel create(
             Iterable<RoomRequest> requests,
             MonetaryAmount premiumPrice,
             int premiumRoomsCount,
@@ -63,10 +49,10 @@ class OccupancyModel implements OccupancyPlan {
                 .sorted(comparing(RoomRequest::maxPrice).reversed())
                 .partition(request -> request.maxPrice().isGreaterThanOrEqualTo(premiumPrice))
                 .apply((premiumRequests, economyRequests)
-                        -> createBookingPlan(premiumRequests, economyRequests, premiumRoomsCount, economyRoomsCount));
+                        -> createOccupancyModel(premiumRequests, economyRequests, premiumRoomsCount, economyRoomsCount));
     }
 
-    private static OccupancyPlan createBookingPlan(
+    private static OccupancyModel createOccupancyModel(
             Stream<RoomRequest> premiumRequests,
             Stream<RoomRequest> economyRequests,
             int premiumRoomsCount,

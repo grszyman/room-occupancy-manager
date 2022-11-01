@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlanDto;
+import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlan;
 import pl.szymsoft.hotel.occupancy.domain.api.OccupancyPlanner;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -101,7 +101,7 @@ class OccupancyPlannerRouterUnitTest {
 
         @Bean
         OccupancyPlanner occupancyPlanner() {
-            return (premiumRoomsCount, economyRoomsCount) -> OccupancyPlanDto.empty();
+            return (premiumRoomsCount, economyRoomsCount) -> OccupancyPlan.empty();
         }
     }
 }

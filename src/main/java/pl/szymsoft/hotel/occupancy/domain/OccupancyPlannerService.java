@@ -11,7 +11,7 @@ import javax.money.MonetaryAmount;
 import static lombok.AccessLevel.PROTECTED;
 
 @Builder(access = PROTECTED)
-class OccupancyPlannerService implements OccupancyPlanner {
+final class OccupancyPlannerService implements OccupancyPlanner {
 
     @NonNull
     private final MonetaryAmount premiumPrice;
@@ -27,7 +27,8 @@ class OccupancyPlannerService implements OccupancyPlanner {
                 .premiumPrice(premiumPrice)
                 .premiumRoomsCount(premiumRoomsCount)
                 .economyRoomsCount(economyRoomsCount)
-                .build();
+                .build()
+                .toPlan();
     }
 
 }
